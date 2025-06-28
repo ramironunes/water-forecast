@@ -1,14 +1,27 @@
 [project]
-name = "project-template"
-version = "0.0.5"
+name = "water-forecast"
+description = "Project under development focused on data analysis and water consumption forecasting using Artificial Intelligence models."
+dynamic = ["version"]
+readme = "README.md"
 requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.27.0",
+]
 
-#
-# mypy
-#
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.16.0",
+    "pip-tools>=7.4.1",
+    "pre-commit>=4.2.0",
+    "pytest>=8.4.0",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "ruff>=0.11.13",
+]
 
 [tool.mypy]
-files = ["project_template", "tasks.py"]    # Directory or files to be checked
+files = ["water_forecast"]         # Directory or files to be checked
 allow_redefinition = false      # Disallows variable redefinition in the same scope
 check_untyped_defs = true       # Checks functions without type annotations
 ignore_missing_imports = true   # Ignores errors for third-party modules without type annotations
@@ -18,16 +31,11 @@ warn_return_any = true          # Warns if functions return Any
 warn_unused_ignores = true      # Warns about unnecessary `# type: ignore` comments
 warn_unreachable = true         # Warns about unreachable code
 
-#
-# pytest
-#
-
 [tool.pytest.ini_options]
+addopts = "-ra --cov=water_forecast --cov-report=term-missing"
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
 pythonpath = ["."]
-
-#
-# Ruff
-#
 
 [tool.ruff.lint]
 extend-select = [
@@ -41,7 +49,13 @@ extend-select = [
 ]
 ignore = [
     "B011",     # flake8-bugbear: allows 'assert False', useful for pytest testing.
+    "E501",     # pycodestyle: allows long lines, useful for keeping docstrings readable.
+    "PLR0913",  # pylint: allows functions with >5 arguments, useful in parametrized tests.
+    "PLR2004",  # pylint: allows magic values in comparisons, useful in concise test asserts.
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["project_template", "tasks"]
+known-first-party = ["water_forecast"]
+
+[tool.setuptools]
+packages = ["water_forecast"]
