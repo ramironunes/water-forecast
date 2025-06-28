@@ -33,12 +33,23 @@ repos:
         stages: [pre-commit]
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        files: \.(css|less|scss|ts|tsx|graphql|gql|json|js|jsx|md|html)$
+        files: \.(css|graphql|gql|html|json|js|jsx|less|md|scss|ts|tsx|ya?ml)$
         exclude: (package|tslint|package-lock|en|pt|.*test.*)\.json|test-setup.ts$|(\/dist\/)
         additional_dependencies:
           - prettier@2.8.8
-          - "@trivago/prettier-plugin-sort-imports@4.3.0"
-          - "prettier-plugin-sort-json@2.0.0"
+          - 'prettier-plugin-sort-json@2.0.0'
+          - '@trivago/prettier-plugin-sort-imports@4.3.0'
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-yaml
+        args:
+          - --unsafe
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
