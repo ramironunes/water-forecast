@@ -1,0 +1,9 @@
+version: 2
+updates:
+  # 📦 Updates root-level dependencies
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    commit-message:
+      prefix: ⬆
