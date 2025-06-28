@@ -1,7 +1,7 @@
 ---
 name: 📌 General Issue
 about: General improvements or new features
-title: "[TMPL-XXXX] "
+title: '[FORE-XXXX] '
 assignees: ramironunes
 ---
 

@@ -1,108 +1,46 @@
-# Compiled source files
-*.class
-*.dll
-*.exe
-*.o
-*.out
-*.pyc
-*.pyd
-*.pyo
-*.so
+# 🌐 Venvs & UV
+.venv/
+.uv/
+env/
+venv/
 
-# Configuration files
-.installed.cfg
-MANIFEST
-*.cover
+# 🔧 Build Artifacts
+*.egg-info/
+build/
+dist/
+*.pyc
+__pycache__/
+
+# 🧪 Test & Coverage
+.coverage
+coverage/
+htmlcov/
+.cache/
+.pytest_cache/
+
+# 📄 Logs
+*.log
+*.log.*
+*.gz
+
+# 📦 Packaging helpers
 *.manifest
 *.spec
 
-# Directories
-__pycache__/
-build/
-coverage/
-develop-eggs/
-dist/
-downloads/
-eggs/
-env/
-lib/
-lib64/
-node_modules/
-parts/
-sdist/
-target/
-var/
-venv/
-.venv/
-.wheels
-
-# Log files
-*.log
-*.log.gz
-*.tlog
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Python specific
-.Python
-*.py[cod]
-.hypothesis/
-.pytest_cache/
-.tox/
-.nox/
-.coverage
-.coverage.*
-nosetests.xml
-coverage.xml
-htmlcov/
-
-# Pylint
-pylint-output.xml
-
-# Jupyter Notebook
+# 🧪 Jupyter
 .ipynb_checkpoints
 
-# Sphinx documentation
-docs/_build/
+# 📦 Wheel cache
+.wheels/
+.eggs/
+sdist/
+develop-eggs/
+parts/
+var/
 
-# Django specific
-db.sqlite3
-local_settings.py
+# 🔍 Ruff / mypy / lint artifacts
+.mypy_cache/
+.ruff_cache/
 
-# Flask specific
-instance/
-.webassets-cache
-
-# Scrapy specific
-.scrapy
-
-# Operating system generated files
-# Linux
-*~
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
-Thumbs.db
-Desktop.ini
-ehthumbs.db
-$RECYCLE.BIN/
-
-# IDE / Editor specific
-.idea/
-# .vscode/
-*.iml
-*.ipr
-*.iws
-
-# Eclipse IDE
-.project
-.classpath
-.csettings/
-
-# JetBrains IDEs
-.idea/
-*.iml
+# 🧪 PDM or Poetry (se usado por fallback)
+__pypackages__/
