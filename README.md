@@ -1,82 +1,159 @@
-# Project Template
+# 💧 Water Forecast
 
-This repository serves as a template for projects, offering a structured setup with Conda, pre-commit hooks, and automation tools to ensure code quality and streamline development workflows.
+Water Forecast is a backend application built with **FastAPI**, responsible for serving AI-based water consumption forecasts, managing database interactions, and exposing RESTful APIs to frontend clients and AI modules like [water-forecast-ai].
 
----
+## 🚀 Features
 
-## **Features**
+- **FastAPI server** with clean and modular architecture.
+- **Database integration** using SQLAlchemy ORM with PostgreSQL.
+- **Migrations** powered by Alembic for schema version control.
+- **Redis support** for caching and fast access to AI-generated forecasts.
+- **Structured configuration** with Pydantic-based settings.
+- **Code quality** enforced with `ruff` and `mypy`.
+- **Testing and coverage** with `pytest`.
+- **Environment and tooling management** via `uv` and `pyproject.toml`.
 
-- Environment management with Conda and `conda-lock` for dependency locking.
-- Code quality checks with `ruff` and `mypy`.
-- Pre-commit hooks for automated linting and formatting.
-- Task automation using `Invoke` and `Makefile`.
-- Ready-to-use structure for source code and tests.
-- GitHub Actions workflows for CI/CD.
+## 🧭 System Architecture
 
----
+The diagram below illustrates the initial architecture design for the Water Forecast system, highlighting the interaction between the web client, FastAPI server, cache/database layers, and AI runner models.
 
-## **Requirements**
+```mermaid
+flowchart LR
+    %% Groups
+    subgraph client ["Client"]
+        web_client(["Web Client"])
+    end
 
-- [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Mamba](https://mamba.readthedocs.io/).
-- `make` (optional but recommended for easier task management).
+    subgraph server ["Server"]
+        web_server(["Web Server"])
+        database[(Database)]
+        cache_db[(Cache Database)]
+    end
 
----
+    subgraph runner ["Runner"]
+        runner_manager{{"Runner Manager"}}
+        runner_model_a(("ML Model A"))
+        runner_model_b(("ML Model B"))
+        runner_model_n(("ML Model N"))
+    end
 
-## **Setup Instructions**
+    %% Client to server
+    web_client -->|HTTP/HTTPS| web_server
 
-1. Clone the repository:
+    %% Server interactions
+    web_server --> database
+    web_server -.->|Write Cache| cache_db
 
-   ```bash
-   git clone <repository-url>
-   cd project-template
-   ```
+    %% Manager polls from cache
+    runner_manager -.->|Poll Cache| cache_db
 
-2. Create and activate the environment:
+    %% Manager triggers runners
+    runner_manager --> runner_model_n
+    runner_manager --> runner_model_b
+    runner_manager --> runner_model_a
 
-   ```bash
-   make setup
-   ```
+    %% Runners call server
+    runner_model_a ==>|Call API| web_server
+    runner_model_b ==>|Call API| web_server
+    runner_model_n ==>|Call API| web_server
 
-3. Verify the setup:
-   ```bash
-   make lint
-   make test
-   ```
+    %% Runners read/write cache
+    runner_model_a -.-> cache_db
+    runner_model_b -.-> cache_db
+    runner_model_n -.-> cache_db
 
----
+    %% Styling
+    classDef dashed stroke:#666,stroke-dasharray: 5 5;
+    classDef apiCall stroke:#1e90ff,stroke-width:2px;
+    classDef runnerNode fill:#d0e4ff,stroke:#003c8f,stroke-width:2px,color:#003c8f;
+    classDef cacheStyle fill:#d82c20,stroke:#a41e11,stroke-width:2px,color:#ffffff;
+    classDef dbStyle fill:#336791,stroke:#1e4e79,stroke-width:2px,color:#ffffff;
 
-## **Makefile Commands**
+    class cache_db cacheStyle;
+    class database dbStyle;
+    class web_server apiCall;
+    class runner_model_a,runner_model_b,runner_model_n runnerNode;
+    class web_server,runner_manager,database,cache_db dashed;
+```
 
-| Command      | Description                                                                 |
-| ------------ | --------------------------------------------------------------------------- |
-| `make build` | Ensures the environment is created and updated with `conda`.                |
-| `make setup` | Sets up the Conda environment, installs dependencies, and pre-commit hooks. |
-| `make lint`  | Runs `ruff` and `mypy` to check code quality and type hints.                |
-| `make test`  | Runs the test suite using `pytest`.                                         |
+## ⚙️ Environment Setup
 
----
+This project uses [uv] for Python environment and dependency management.
 
-## **Pre-commit Hooks**
-
-This project uses pre-commit hooks to ensure consistent code quality. Installed hooks include:
-
-- `ruff` for linting and formatting.
-- `mypy` for static type checking.
-
-Hooks are installed automatically with `make setup`. To run them manually:
+### Install uv
 
 ```bash
-pre-commit run --all-files
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Create and activate virtual environment
+
+```bash
+uv venv .venv
+source .venv/bin/activate
+```
+
+### Install development dependencies
+
+```bash
+uv pip install -e ".[dev]"
+```
+
+## 🔒 Dependency Locking
+
+To generate a lockfile for reproducible environments:
+
+```bash
+pip-compile pyproject.toml --extra=dev --output-file=requirements.lock.txt
+```
+
+This ensures all dependencies (including transitive ones) are pinned and can be synced across environments with full reproducibility.
+
+## 🧪 Running Tests
+
+After activating the virtual environment:
+
+```bash
+pytest
+```
+
+With coverage report:
+
+```bash
+pytest --cov=water_forecast --cov-report=term-missing
+```
+
+## 🧹 Code Quality Checks
+
+### Run Ruff (linter & formatter)
+
+```bash
+ruff check water_forecast
+```
+
+### Run Mypy (type checker)
+
+```bash
+mypy water_forecast
+```
+
+## 🌐 API Documentation
+
+Once the server is running, access the interactive API docs at:
+
+```
+http://localhost:8000/docs
+```
+
+Or the alternative ReDoc view:
+
+```
+http://localhost:8000/redoc
 ```
 
 ---
 
-## **Contributing**
+This backend service is designed to work in tandem with [water-forecast-ai] and frontend clients for delivering accurate and real-time water consumption predictions.
 
-1. Fork this repository.
-2. Create a new branch (`git checkout -b fb-your-feature-name`).
-3. Commit your changes with a meaningful message.
-4. Push to the branch (`git push origin fb-your-feature-name`).
-5. Open a pull request.
-
----
+[uv]: https://github.com/astral-sh/uv
+[water-forecast-ai]: https://github.com/ramironunes/water-forecast-ai/
